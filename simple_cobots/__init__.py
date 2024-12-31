@@ -1,0 +1,1 @@
+# simple cobots init
