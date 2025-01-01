@@ -14,6 +14,10 @@ $ python3 unify.py
 ```
 Then tell it to do something, e.g. stack the blocks in reverse, sleep for 10 seconds, or move a block onto a pad.
 
+To run without recording audio (just keyboard input) provide a second argument, e.g.
+```
+$ python3 unify.py mock
+```
 
 ## Components
 ``` mermaid
