@@ -24,8 +24,8 @@ unified_library = ["sleep(seconds)", "print(text)", "self.blockstack_reverse_sta
 unified_library_truncs = ["sleep", "print", "self.blockstack_reverse_stack", "self.move_block_to_pad"] # generated
 
 
-
-
+PRINT = False
+PRINT1 = True
 
 class Collaboration:
     def __init__(self):
@@ -54,8 +54,9 @@ class Collaboration:
     def interpret(self, message):
 
         prompt = 'Here is a user message: "' + message + '"\nRespond with corresponding and necessary function calls from this set: \n' + str(unified_library) + "."
-        print("$$$$$$$$$$$Prompting:$$$$$$$$$$$$$$")
-        print('Prompting with:\n\n' + prompt +"\n")
+        if PRINT:
+            print("$$$$$$$$$$$Prompting:$$$$$$$$$$$$$$")
+            print('Prompting with:\n\n' + prompt +"\n")
         completion = client.chat.completions.create(
           model="gpt-4o",
           messages=[
@@ -63,39 +64,52 @@ class Collaboration:
             {"role": "user", "content": prompt}
           ]
         )
-        print("$$$$$$$$$$$End Prompting$$$$$$$$$$$$$$")
+        if PRINT:
+            print("$$$$$$$$$$$End Prompting$$$$$$$$$$$$$$")
         text = completion.choices[0].message.content
-        print("\n~~~~~~~~~~~~~~~~~Response:~~~~~~~~~~~~~~~~~")
-        print(text)
-        print("~~~~~~~~~~~~~~~~~End Response:~~~~~~~~~~~~~~~~~\n")
+        if PRINT:
+            print("\n~~~~~~~~~~~~~~~~~Response:~~~~~~~~~~~~~~~~~")
+            print(text)
+            print("~~~~~~~~~~~~~~~~~End Response:~~~~~~~~~~~~~~~~~\n")
         # Actualizing
         
         # words = text.replace(",","").replace("\n", " ").split(' ') Method 1
+        if PRINT1:
+            print(".................Interpretation...............")
         words = text.split("\n")
         executions = []
         for w in words:
-                print("Word: " + w, end="")
+                if PRINT1:
+                    print("Word: " + w, end="")
                 index = w.find("(")
                 if index != -1:
                         w_trunc = w[:index]
                         if w_trunc in unified_library_truncs:
-                                print(" = hit!")
-                                executions.append(w)
+                            if PRINT1:
+                                print(" = Hit!")
+                            executions.append(w)
                         else:
-                                print(" = miss!")
-                                pass # just another word
+                            if PRINT1:
+                                print(" = Miss!")
+                            pass # just another word
                 else:
-                        print(" = not a function!")
-        print("\n")
+                    if PRINT1:
+                        print(" = Does not contain a function!")
+        if PRINT1:
+            print(".............End Interpretation.............")
         #print("(Executions:)\n" + str(executions))
-        print("++++++++++Executing:+++++++++++")
+        if PRINT:
+            print("++++++++++Executing:+++++++++++")
         for x in executions:
-                try:
-                        print("Executing " + x)
-                        exec(x)
-                        print("         |_____executed " + x + "__")
-                except Exception as e:
-                        
-                        print(e)
-                        print("^^^ Ignoring error potential execution " + x + "...)")
-        print("++++++++++End Executing+++++++++++")
+            try:
+                if PRINT:
+                    print("Executing " + x)
+                exec(x)
+                if PRINT:
+                    print("         |_____executed " + x + "__")
+            except Exception as e:
+                if PRINT:        
+                    print(e)
+                    print("^^^ Ignoring error potential execution " + x + "...)")
+        if PRINT:
+            print("++++++++++End Executing+++++++++++")

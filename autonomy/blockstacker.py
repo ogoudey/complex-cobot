@@ -7,6 +7,7 @@ sys.path.append(os.getcwd() + "/task1")
 from importlib import reload
 import threading
 
+PRINT = False
 
 class BlockStacker:
     
@@ -17,7 +18,8 @@ class BlockStacker:
             
                 self.robot = NiryoRobot("169.254.200.201") # Assuming ethernet!
             except Exception as e:
-                print("Couldn't connect to robot")
+                if PRINT:
+                    print("Couldn't connect to robot")
                 self.robot_actual = False #Mock
                 self.robot = None
         else:
@@ -54,7 +56,8 @@ class BlockStacker:
         self.robot.tool.open_gripper()
 
     def execute(self, plan):
-        print("%%%%%%%%%%%%%% Plan Execution: %%%%%%%%%%%%%")
+        if PRINT:
+            print("%%%%%%%%%%%%%% Plan Execution: %%%%%%%%%%%%%")
 
         a1 = [0.5845812043582548, -0.498940318815149, -0.561317863564226, 0.01083051910499222, -0.5170441791072538, -0.012179192713292153]
         b1 = [1.0396374095722325, -0.5034851561873422, -0.5673776467271503, 0.12894703977218658, -0.5170441791072538, -0.012179192713292153]
@@ -110,12 +113,14 @@ class BlockStacker:
             
             
             if self.robot_actual:
-                print("executing " + str(action))
+                if PRINT:
+                    print("executing " + str(action))
                 exec("self." + str(action))
             else:
                 print('exec("self.' + str(action) + '")')
-        print("Goal reached.")
-        print("%%%%%%%%%%%%%% End Plan Execution: %%%%%%%%%%%%%")	
+        if PRINT:
+            print("Goal reached.")
+            print("%%%%%%%%%%%%%% End Plan Execution: %%%%%%%%%%%%%")	
 		
 		 
     def start(self):

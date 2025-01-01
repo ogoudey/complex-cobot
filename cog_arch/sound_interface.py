@@ -17,8 +17,16 @@ class SoundInterface:
             print("Stopping listening due to: " + exhaust + " detected in: " + "".join(map(str, hl_decoder.composition.values())))
         else:
             print("How am I here?")
+     
+    def mock_listen_for_hl(self, transcription, event): #not sure why we're passing this as an argument...
         
-    
+        index = 0
+        while True:
+            x = input("---type--->")
+            self.transcription.composition[index] = x 
+            event.set()  
+            index += 1
+            
     def activate(self):
         t = threading.Thread(target=self.listen_for_hl, args=[self.transcription])
         t.start()

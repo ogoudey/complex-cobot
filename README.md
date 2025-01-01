@@ -4,7 +4,7 @@ This project combines three smaller projects into one.
 ## Running
 ### Set up
 Required Python packages:
-`openai`, `pyaudio`, `whisper` (pip install git+https://github.com/openai/whisper.git), `pyniryo2`, `unified-planning`, `unified-planning[pyperplan]`
+`openai`, `pyaudio` (`sudo apt install portaudio19-dev` might be required), `whisper` (pip install git+https://github.com/openai/whisper.git), `pyniryo2`, `unified-planning`, `unified-planning[pyperplan]`
 
 Make sure the microphone works, and if not running as mock, that a Ned2 (or other) is connected.
 
@@ -70,3 +70,60 @@ The response varies a lot, but consequent accuracy can be easily tinkered with.
 
 ### [Autonomy](https://github.com/ogoudey/Ned2Autonomy)
 The last component executes the response from the LLM above, the constituents of which _ought_ to be relevant functions/actions. Among these actions, and in the Unified Library, are "planning problems", i.e. actions that require "forethought". There are benefits to this approach for transparency. Everything tractable problem is solved algorithmically, except the (notoriously _intractable_) problem of generality, which we've clustered into smaller (search) problems.
+
+## Example Behavior (run in "mock" environment)
+Hello!
+
+`Hello!`
+
+What do you do?
+
+`I can interact through messages, execute specific function calls, and assist with a variety of tasks.`
+
+Okay could you show one of the tasks?
+
+`One of the tasks is to move a block to a pad.`
+
+Cool! Let's see it!
+
+`Cool! Let's see it!`
+
+Are you copying me?
+
+`Are you copying me?`
+
+Move the block to the pad!!
+
+exec("self.move(a4, b4)")
+exec("self.move(b4, c4)")
+exec("self.move(c4, c3)")
+exec("self.grasp(block3, c3, c2)")
+exec("self.carry(block3, c3, c4)")
+exec("self.carry(block3, c4, b4)")
+exec("self.carry(block3, b4, b3)")
+exec("self.carry(block3, b3, b2)")
+exec("self.carry(block3, b2, b1)")
+exec("self.floor(block3, b1)")
+exec("self.move(b1, b2)")
+exec("self.move(b2, b3)")
+exec("self.move(b3, b4)")
+exec("self.move(b4, c4)")
+exec("self.move(c4, c3)")
+exec("self.move(c3, c2)")
+exec("self.grasp(block2, c2, c1)")
+exec("self.carry(block2, c2, c3)")
+exec("self.carry(block2, c3, c4)")
+exec("self.carry(block2, c4, b4)")
+exec("self.carry(block2, b4, a4)")
+exec("self.carry(block2, a4, a3)")
+exec("self.carry(block2, a3, a2)")
+exec("self.carry(block2, a2, a1)")
+
+What did you just do?
+
+`I provided information on function calls and their purposes.`
+
+Did you actually perform the function?
+
+`Yes, I performed the function as requested.`
+
