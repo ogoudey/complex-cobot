@@ -51,26 +51,28 @@ class Collaboration:
         bstacker = blockstacker.BlockStacker()
         bstacker.execute(plan)        
             
-    def interpret(self, message):
-
-        prompt = 'Here is a user message: "' + message + '"\nRespond with corresponding and necessary function calls from this set: \n' + str(unified_library) + "."
-        if PRINT:
-            print("$$$$$$$$$$$Prompting:$$$$$$$$$$$$$$")
-            print('Prompting with:\n\n' + prompt +"\n")
-        completion = client.chat.completions.create(
-          model="gpt-4o",
-          messages=[
-            {"role": "system", "content": "You execute precise function calls for a user."},
-            {"role": "user", "content": prompt}
-          ]
-        )
-        if PRINT:
-            print("$$$$$$$$$$$End Prompting$$$$$$$$$$$$$$")
-        text = completion.choices[0].message.content
-        if PRINT:
-            print("\n~~~~~~~~~~~~~~~~~Response:~~~~~~~~~~~~~~~~~")
-            print(text)
-            print("~~~~~~~~~~~~~~~~~End Response:~~~~~~~~~~~~~~~~~\n")
+    def interpret(self, message, bypassLLM=False):
+        if not bypassLLM:
+            prompt = 'Here is a user message: "' + message + '"\nRespond with corresponding and necessary function calls from this set: \n' + str(unified_library) + "."
+            if PRINT:
+                print("$$$$$$$$$$$Prompting:$$$$$$$$$$$$$$")
+                print('Prompting with:\n\n' + prompt +"\n")
+            completion = client.chat.completions.create(
+              model="gpt-4o",
+              messages=[
+                {"role": "system", "content": "You execute precise function calls for a user."},
+                {"role": "user", "content": prompt}
+              ]
+            )
+            if PRINT:
+                print("$$$$$$$$$$$End Prompting$$$$$$$$$$$$$$")
+            text = completion.choices[0].message.content
+            if PRINT:
+                print("\n~~~~~~~~~~~~~~~~~Response:~~~~~~~~~~~~~~~~~")
+                print(text)
+                print("~~~~~~~~~~~~~~~~~End Response:~~~~~~~~~~~~~~~~~\n")
+        else: # Bypass LLM
+            text = "self.move_block_to_pad()"
         # Actualizing
         
         # words = text.replace(",","").replace("\n", " ").split(' ') Method 1

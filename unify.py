@@ -13,14 +13,26 @@ from cog_arch import sound_interface
 
 import sys
 import threading
+import argparse
+
+
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser() 
+    parser.add_argument('-m', '--mock', action='store_true')         
+    parser.add_argument('-b', '--bypassLLM', action='store_true')   
+       
+    args = parser.parse_args()
+    print(args)
+    print(args.mock)
+    print(args.bypassLLM)
+        
     event = threading.Event()
 
     co = cobot.Collaboration()
     si = sound_interface.SoundInterface()
     
-    if len(sys.argv) == 2:
+    if args.mock:
         transcriber = threading.Thread(target=si.mock_listen_for_hl, args=[si.transcription, event]) 
     else:
         transcriber = threading.Thread(target=si.listen_for_hl, args=[si.transcription, event])
@@ -34,7 +46,7 @@ if __name__ == "__main__":
             message = si.transcription.composition[latest_composition_index]
             if PRINT:
                 print(">>>>>>>>>>>> Composition updated. Composition["+str(latest_composition_index)+"]: '" + message + "'")
-            co.interpret(message)
+            co.interpret(message, args.bypassLLM)
             event.clear()
         else:
             # no new messages

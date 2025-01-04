@@ -11,7 +11,7 @@ from . import audio # audio slicer with configuration
 from . import play
 
 def transcribe(file_name, composition, index):
-    print("Transcribing for index "+index+"...")
+    print("Transcribing for index "+str(index)+"...")
     a = t.time()
     model = whisper.load_model("tiny.en") # maybe all threads can use the same loaded model
     print("Model loaded for index "+index+"...")
