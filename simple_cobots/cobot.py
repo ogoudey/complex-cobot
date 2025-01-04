@@ -24,7 +24,7 @@ unified_library = ["sleep(seconds)", "print(text)", "self.blockstack_reverse_sta
 unified_library_truncs = ["sleep", "print", "self.blockstack_reverse_stack", "self.move_block_to_pad"] # generated
 
 
-PRINT = False
+PRINT = True
 PRINT1 = True
 
 class Collaboration:
@@ -32,22 +32,22 @@ class Collaboration:
         pass
     
     def blockstack_reverse_stack(self):
-        problem = blockstacking.BlockStackingProblem()
+        bsprob = blockstacking.BlockStackingProblem()
         
-        p = problem.problem   
+        p = bsprob.problem   
         p.add_goal(And(p.fluent("b_at")(p.object("block3"), p.object("a3")), p.fluent("b_at")(p.object("block2"), p.object("a2")), p.fluent("b_at")(p.object("block1"), p.object("a1"))))
         
-        plan = problem.solve() # This planner too sp[ecific
+        plan = bsprob.solve() # This planner too sp[ecific
         bstacker = blockstacker.BlockStacker()
         bstacker.execute(plan) # This executor too specific
         
     def move_block_to_pad(self):
-        problem = blockstacking.BlockStackingProblem()
+        bsprob = blockstacking.BlockStackingProblem()
 
-        p = problem.problem
+        p = bsprob.problem
         p.add_goal(And(p.fluent("b_at")(p.object("block2"), p.object("a1"))))
         
-        plan = problem.solve()
+        plan = bsprob.solve()
         bstacker = blockstacker.BlockStacker()
         bstacker.execute(plan)        
             
