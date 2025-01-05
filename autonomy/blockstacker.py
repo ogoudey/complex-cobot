@@ -7,7 +7,7 @@ sys.path.append(os.getcwd() + "/task1")
 from importlib import reload
 import threading
 
-PRINT = False
+PRINT = True
 
 class BlockStacker:
     

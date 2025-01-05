@@ -24,7 +24,7 @@ unified_library = ["sleep(seconds)", "print(text)", "self.blockstack_reverse_sta
 unified_library_truncs = ["sleep", "print", "self.blockstack_reverse_stack", "self.move_block_to_pad"] # generated
 
 
-PRINT = False
+PRINT = True
 PRINT1 = True
 
 class Collaboration:
@@ -32,45 +32,47 @@ class Collaboration:
         pass
     
     def blockstack_reverse_stack(self):
-        problem = blockstacking.BlockStackingProblem()
+        bsprob = blockstacking.BlockStackingProblem()
         
-        p = problem.problem   
+        p = bsprob.problem   
         p.add_goal(And(p.fluent("b_at")(p.object("block3"), p.object("a3")), p.fluent("b_at")(p.object("block2"), p.object("a2")), p.fluent("b_at")(p.object("block1"), p.object("a1"))))
         
-        plan = problem.solve() # This planner too sp[ecific
+        plan = bsprob.solve() # This planner too sp[ecific
         bstacker = blockstacker.BlockStacker()
         bstacker.execute(plan) # This executor too specific
         
     def move_block_to_pad(self):
-        problem = blockstacking.BlockStackingProblem()
+        bsprob = blockstacking.BlockStackingProblem()
 
-        p = problem.problem
+        p = bsprob.problem
         p.add_goal(And(p.fluent("b_at")(p.object("block2"), p.object("a1"))))
         
-        plan = problem.solve()
+        plan = bsprob.solve()
         bstacker = blockstacker.BlockStacker()
         bstacker.execute(plan)        
             
-    def interpret(self, message):
-
-        prompt = 'Here is a user message: "' + message + '"\nRespond with corresponding and necessary function calls from this set: \n' + str(unified_library) + "."
-        if PRINT:
-            print("$$$$$$$$$$$Prompting:$$$$$$$$$$$$$$")
-            print('Prompting with:\n\n' + prompt +"\n")
-        completion = client.chat.completions.create(
-          model="gpt-4o",
-          messages=[
-            {"role": "system", "content": "You execute precise function calls for a user."},
-            {"role": "user", "content": prompt}
-          ]
-        )
-        if PRINT:
-            print("$$$$$$$$$$$End Prompting$$$$$$$$$$$$$$")
-        text = completion.choices[0].message.content
-        if PRINT:
-            print("\n~~~~~~~~~~~~~~~~~Response:~~~~~~~~~~~~~~~~~")
-            print(text)
-            print("~~~~~~~~~~~~~~~~~End Response:~~~~~~~~~~~~~~~~~\n")
+    def interpret(self, message, bypassLLM=False):
+        if not bypassLLM:
+            prompt = 'Here is a user message: "' + message + '"\nRespond with corresponding and necessary function calls from this set: \n' + str(unified_library) + "."
+            if PRINT:
+                print("$$$$$$$$$$$Prompting:$$$$$$$$$$$$$$")
+                print('Prompting with:\n\n' + prompt +"\n")
+            completion = client.chat.completions.create(
+              model="gpt-4o",
+              messages=[
+                {"role": "system", "content": "You execute precise function calls for a user."},
+                {"role": "user", "content": prompt}
+              ]
+            )
+            if PRINT:
+                print("$$$$$$$$$$$End Prompting$$$$$$$$$$$$$$")
+            text = completion.choices[0].message.content
+            if PRINT:
+                print("\n~~~~~~~~~~~~~~~~~Response:~~~~~~~~~~~~~~~~~")
+                print(text)
+                print("~~~~~~~~~~~~~~~~~End Response:~~~~~~~~~~~~~~~~~\n")
+        else: # Bypass LLM
+            text = "self.move_block_to_pad()"
         # Actualizing
         
         # words = text.replace(",","").replace("\n", " ").split(' ') Method 1
