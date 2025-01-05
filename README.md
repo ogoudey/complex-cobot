@@ -1,6 +1,10 @@
 # complex-cobot
 This project combines three smaller projects into one.
 
+A visualization:
+
+![Concept](resources/concept-model.png)
+
 ## Running
 ### Set up
 Required Python packages:
