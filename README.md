@@ -29,7 +29,7 @@ graph LR
     subgraph CogArch
     C@{ shape: procs, label: "Audio"} --> B(Linear Composition)
     end
-    B -.- A((Interpretation))
+    B --> A((Interpretation))
     
     subgraph Cobot
     A --> D[Automated Planning]
@@ -39,19 +39,23 @@ graph LR
         E
     end
     
-    E -.- O
+    E --> O
     end
-    D -.- F(Problem)
+    D --> F(Problem)
     subgraph Autonomy
     G(Domain) --> F
     F --> H(Execution)
-    H -.- O[Action]
+    H --> O[Action]
     end
+    subgraph Inventory
+    K[Inventory] --> F
+    end
+    O --remove--- K
 ```
 ### [CogArch](https://github.com/ogoudey/cog_arch)
 A very minimal cognitive architecture. See arguments at the [repo](https://github.com/ogoudey/cog_arch) on which this is based.
 
-Using two threads for recording and two for transcribing, we have a shortcut to a stream. As a form of communication, we here assume external, verbal (auditory) English is the best.
+Using two threads for recording and two for transcribing, we have a shortcut to a stream. As a form of communication, we here assume external, verbal (auditory) English is the best. The output is a sequence of text.
 ```mermaid
 sequenceDiagram
     actor _
@@ -74,10 +78,13 @@ flowchart LR
     A[all functions deemed acceptable] --> L
     P ---|LLM Call|Response
 ```
-The response varies a lot, but consequent accuracy can be easily tinkered with.
+The response is the interpretation, which chooses what to do next.
 
 ### [Autonomy](https://github.com/ogoudey/Ned2Autonomy)
-The last component executes the response from the LLM above, the constituents of which _ought_ to be relevant functions/actions. Among these actions, and in the Unified Library, are "planning problems", i.e. actions that require "forethought". There are benefits to this approach for transparency. Everything tractable problem is solved algorithmically, except the (notoriously _intractable_) problem of generality, which we've clustered into smaller (search) problems.
+Should the interpretation yield a "complex" action (a "planning problem"), the cobot will call a planner. The problem domain for the planner is derivative: Each time a complex action is required, the domain refers to the `Inventory` for what the domain actually is.
+
+### Inventory
+This describes the environment in real time (e.g. these blocks at those positions). It is called upon to instantiate the objects of the planning problem.
 
 ## Example Behavior (run in "mock" environment)
 Hello!
