@@ -2,6 +2,7 @@
 
 import os
 from time import sleep
+import random # for block selection - no good.
 
 from openai import OpenAI
 
@@ -9,7 +10,7 @@ from unified_planning.shortcuts import *
 #from gpiozero import Servo
 
 from autonomy import blockstacking, blockstacker
-
+#from inventory import tracker
 #servo = Servo(17)
 
 client = OpenAI()
@@ -20,8 +21,8 @@ All things we declare to be executable with "suggestively typed" args ==> unifie
 
 
 """
-unified_library = ["sleep(seconds)", "print(text)", "self.blockstack_reverse_stack()", "self.move_block_to_pad()"] # search domain
-unified_library_truncs = ["sleep", "print", "self.blockstack_reverse_stack", "self.move_block_to_pad"] # generated
+unified_library = ["sleep(seconds)", "print(text)", "self.move_block_to_pad()"] # search domain
+unified_library_truncs = ["sleep", "print",  "self.move_block_to_pad"] # generated
 
 
 PRINT = True
@@ -29,8 +30,9 @@ PRINT1 = True
 
 class Collaboration:
     def __init__(self):
+        self.minimal_block_stacking_problem = blockstacking.MinimalBlockStackingProblem()
         pass
-    
+    """
     def blockstack_reverse_stack(self):
         bsprob = blockstacking.BlockStackingProblem()
         
@@ -40,16 +42,20 @@ class Collaboration:
         plan = bsprob.solve() # This planner too sp[ecific
         bstacker = blockstacker.BlockStacker()
         bstacker.execute(plan) # This executor too specific
-        
+    """    
     def move_block_to_pad(self):
-        bsprob = blockstacking.BlockStackingProblem()
-
+        bsprob = blockstacking.BlockStackingProblem(self.minimal_block_stacking_problem)
         p = bsprob.problem
-        p.add_goal(And(p.fluent("b_at")(p.object("block2"), p.object("a1"))))
+        
+        # This should be an interpretation of a goal.
+        block = random.choice(list(self.minimal_block_stacking_problem.inventory.blocks_at_locations.keys()))
+        p.add_goal(p.fluent("b_at")(p.object(block), p.object("a1"))) # "a1 = pad"
+        
         
         plan = bsprob.solve()
         bstacker = blockstacker.BlockStacker()
-        bstacker.execute(plan)        
+        bstacker.execute(plan)
+        self.minimal_block_stacking_problem.inventory.remove_block(block)     
             
     def interpret(self, message, bypassLLM=False):
         if not bypassLLM:
@@ -110,8 +116,8 @@ class Collaboration:
                 if PRINT:
                     print("         |_____executed " + x + "__")
             except Exception as e:
-                if PRINT:        
-                    print(e)
+                if PRINT:
+                    print(e) 
                     print("^^^ Ignoring error potential execution " + x + "...)")
         if PRINT:
             print("++++++++++End Executing+++++++++++")

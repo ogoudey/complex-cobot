@@ -5,12 +5,21 @@ up.shortcuts.get_environment().credits_stream = None
 
 PRINT = True
 
+from inventory import tracker
+import copy # not sure this is the most memory-efficient way to do this...
+
 class MinimalBlockStackingProblem:
     def __init__(self, domain=None):
+        self.inventory = tracker.InventoryTracker()
+        
         # create domain
+        
+        
         Location = UserType('Location')
         Block = UserType('Block')
         self.usertypes = [Block, Location]
+        
+        
         
         hoverable = unified_planning.model.Fluent('hoverable', BoolType(), l=Location)
         
@@ -131,6 +140,7 @@ class MinimalBlockStackingProblem:
         problem.add_action(floor)
         problem.add_action(stack)
         self.actions = [move, close, carry, grasp, grasp_on_floor, floor, stack]
+        
         a1 = unified_planning.model.Object('a1', Location)
         a2 = unified_planning.model.Object('a2', Location)
         a3 = unified_planning.model.Object('a3', Location)
@@ -188,27 +198,55 @@ class MinimalBlockStackingProblem:
         self.children = []
         
 class BlockStackingProblem:
-    def __init__(self):
-        MinimalBlockStackingProblem.__init__(self)
+    def __init__(self, mbsp):
+        # duplicate minimal stacking problem
+        self.problem = mbsp.problem.clone()
+
+        
+        blocks_at_locations = mbsp.inventory.blocks_at_locations
         
         
-        # Re-point to planning terms
-        Block, Location = self.usertypes
-        g_at, hoverable, b_at, connected, over, closed, grasped, ungrasped, is_on_floor, air = self.fluents
-        a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4 = self.static_objects
-        move, close, carry, grasp, grasp_on_floor, floor, stack = self.actions
-        problem = self.problem
+        p = self.problem # shorthand
+        
+        # Re-point to NEEDED planning terms
+        Block = p.user_type("Block")
+        
+        connected = p.fluent("connected")
+        over = p.fluent("over")
+        is_on_floor = p.fluent("is_on_floor")
+        air = p.fluent("air")
+        g_at = p.fluent("g_at")
+        hoverable = p.fluent("hoverable")
+        b_at = p.fluent("b_at")
+        grasped = p.fluent("grasped")
+        
+        a1 = p.object("a1")
+        a2 = p.object("a2")
+        a3 = p.object("a3")
+        a4 = p.object("a4")
+
+        b1 = p.object("b1")
+        b2 = p.object("b2")
+        b3 = p.object("b3")
+        b4 = p.object("b4")
+
+        c1 = p.object("c1")
+        c2 = p.object("c2")
+        c3 = p.object("c3")
+        c4 = p.object("c4")
+
+
+        
         # Add objects
-        
-        block1 = unified_planning.model.Object('block1', Block)
-        block2 = unified_planning.model.Object('block2', Block)
-        block3 = unified_planning.model.Object('block3', Block)
-        
-        problem.add_object(block1)
-        problem.add_object(block2)
-        problem.add_object(block3) 
-           
-        # Initial values
+        for block_str in blocks_at_locations.keys():
+            b = unified_planning.model.Object(block_str, Block)
+            p.set_initial_value(b_at(b, p.object(blocks_at_locations[block_str])), True)           
+            p.set_initial_value(grasped(b), False)
+
+            p.add_object(b)
+
+        problem = p # again, shorthand 
+        # Static relations
         problem.set_initial_value(connected(a1, a2), True)
         problem.set_initial_value(connected(a2, a3), True)
         problem.set_initial_value(connected(a3, a4), True)
@@ -257,18 +295,14 @@ class BlockStackingProblem:
         problem.set_initial_value(air(c2), False)
         problem.set_initial_value(air(c1), False)
         
-        
+        # Dynamic relations
+        # Standardized
         problem.set_initial_value(g_at(a4), True)
-        problem.set_initial_value(b_at(block1, c1), True)
-        problem.set_initial_value(b_at(block2, c2), True)
-        problem.set_initial_value(b_at(block3, c3), True)
-        problem.set_initial_value(grasped(block1), False)
-        problem.set_initial_value(grasped(block2), False)
-        problem.set_initial_value(grasped(block3), False)
+
+        # logical domain setting
         problem.set_initial_value(hoverable(c1), False)
-        problem.set_initial_value(hoverable(c2), False)
-        problem.set_initial_value(hoverable(c3), True)    
-        problem.set_initial_value(hoverable(c4), True)
+        problem.set_initial_value(hoverable(c2), True)
+        problem.set_initial_value(hoverable(b1), True)
         
     def add_goal(self, call_str):
         exec(call_str)

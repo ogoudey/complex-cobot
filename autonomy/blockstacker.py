@@ -1,8 +1,8 @@
 from pyniryo2 import *
 import os
 import sys
-sys.path.append(os.getcwd() + "/task1")
-#import core as c          # planning core
+
+
 
 from importlib import reload
 import threading
@@ -121,10 +121,4 @@ class BlockStacker:
         if PRINT:
             print("Goal reached.")
             print("%%%%%%%%%%%%%% End Plan Execution: %%%%%%%%%%%%%")	
-		
-		 
-    def start(self):
-        p = c.PlanningProblem(None)
-        plan = p.solve()
-        #print(plan)
-        self.execute(plan)
+
