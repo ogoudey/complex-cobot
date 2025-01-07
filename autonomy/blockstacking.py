@@ -6,7 +6,6 @@ up.shortcuts.get_environment().credits_stream = None
 PRINT = True
 
 from inventory import tracker
-import copy # not sure this is the most memory-efficient way to do this...
 
 class MinimalBlockStackingProblem:
     def __init__(self, domain=None):

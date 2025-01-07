@@ -23,9 +23,6 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--bypassLLM', action='store_true')   
        
     args = parser.parse_args()
-    print(args)
-    print(args.mock)
-    print(args.bypassLLM)
         
     event = threading.Event()
 
@@ -36,6 +33,7 @@ if __name__ == "__main__":
         transcriber = threading.Thread(target=si.mock_listen_for_hl, args=[si.transcription, event]) 
     else:
         transcriber = threading.Thread(target=si.listen_for_hl, args=[si.transcription, event])
+
     transcriber.start()
     
     while True:
@@ -49,7 +47,7 @@ if __name__ == "__main__":
             co.interpret(message, args.bypassLLM)
             event.clear()
         else:
-            # no new messages
+            # mainloop room
             pass
     
     
