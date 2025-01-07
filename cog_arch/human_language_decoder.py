@@ -10,7 +10,7 @@ import os
 import threading
 
 from . import audio # audio slicer with configuration
-from . import play
+# from . import play # Commented out for -d flag
 
 def transcribe(file_name, composition, index):
     print("Transcribing for index "+str(index)+"...")

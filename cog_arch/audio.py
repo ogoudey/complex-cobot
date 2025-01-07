@@ -1,6 +1,8 @@
+
+""" # commented out for -d flag
 import pyaudio
 import wave
-
+"""
 import datetime as dt
 
 

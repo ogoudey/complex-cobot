@@ -47,7 +47,7 @@ class Problem:
        
         """
         
-        Add Objects
+        Add Dynamic bjects
         
         """         
         
