@@ -19,7 +19,6 @@ class SoundInterface:
             print("How am I here?")
      
     def mock_listen_for_hl(self, transcription, event): #not sure why we're passing this as an argument...
-        
         index = 0
         while True:
             x = input("---type--->")

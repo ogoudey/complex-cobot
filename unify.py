@@ -19,7 +19,7 @@ import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser() 
-    parser.add_argument('-m', '--mock', action='store_true')         
+    parser.add_argument('-d', '--deaf', action='store_true')         
     parser.add_argument('-b', '--bypassLLM', action='store_true')   
        
     args = parser.parse_args()
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     co = cobot.Collaboration()
     si = sound_interface.SoundInterface()
     
-    if args.mock:
+    if args.deaf:
         transcriber = threading.Thread(target=si.mock_listen_for_hl, args=[si.transcription, event]) 
     else:
         transcriber = threading.Thread(target=si.listen_for_hl, args=[si.transcription, event])

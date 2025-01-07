@@ -1,4 +1,6 @@
-import whisper
+deaf = True # sync with args
+if not deaf:
+    import whisper
 
 import datetime as dt
 import time as t
