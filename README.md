@@ -1,27 +1,10 @@
-# complex-cobot
-This project combines three smaller projects into one.
+# Complex Cobotics Framework
+This project combines smaller sub-projects into one.
 
-A visualization:
 
-![Concept](resources/concept-model.png)
 
-## Running
-### Set up
-Required Python packages:
-`openai`, `pyaudio` (`sudo apt install portaudio19-dev` might be required), `whisper` (`pip install git+https://github.com/openai/whisper.git`), `pyniryo2`, `unified-planning`, `unified-planning[pyperplan]`
+So far this framework is applied in two configurations, an arm and a wheeled robot.
 
-Make sure the microphone works, and if not running as mock, that a Ned2 (or other) is connected.
-
-### Run
-```
-$ python3 unify.py 
-```
-Then tell it to do something, e.g. stack the blocks in reverse, sleep for 10 seconds, or move a block onto a pad.
-
-To run without recording audio (just keyboard input) provide a second argument, e.g.
-```
-$ python3 unify.py mock
-```
 
 ## Components
 ``` mermaid
@@ -83,8 +66,23 @@ The response is the interpretation, which chooses what to do next.
 ### [Autonomy](https://github.com/ogoudey/Ned2Autonomy)
 Should the interpretation yield a "complex" action (a "planning problem"), the cobot will call a planner. The problem domain for the planner is derivative: Each time a complex action is required, the domain refers to the `Inventory` for what the domain actually is.
 
-### Inventory
-This describes the environment in real time (e.g. these blocks at those positions). It is called upon to instantiate the objects of the planning problem.
+## Running
+### Set up
+For the full version, the equired Python packages are:
+`openai`, `pyaudio` (`sudo apt install portaudio19-dev` might be required), `whisper` (`pip install git+https://github.com/openai/whisper.git`), `pyniryo2`, `unified-planning`, `unified-planning[pyperplan]`
+
+Make sure the microphone works, and if not running as mock, that a Ned2 (or other) is connected.
+
+### Run
+```
+$ python3 unify.py 
+```
+Then tell it to do something, e.g. stack the blocks in reverse, sleep for 10 seconds, or move a block onto a pad.
+
+To run without recording audio (just keyboard input):
+```
+$ python3 unify.py -d
+```
 
 ## Example Behavior (run in "mock" environment)
 Hello!
