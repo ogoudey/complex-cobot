@@ -6,7 +6,13 @@ from openai import OpenAI
 
 #from unified_planning.shortcuts import * # dont need
 
+# generic classes
+from autonomy import planner, executor
+
+# blockstacking with Ned2
 from autonomy import blockstacking, blockstacker
+
+
 
 client = OpenAI()
 
