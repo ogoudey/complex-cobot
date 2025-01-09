@@ -3,6 +3,8 @@ A framework for interaction with cobots. So far it has been applied to two robot
 
 State variables are passed to the collaborative part. To collaborate, the robot associates (by an LLM) transcriptions of sensory input to functions from a defined library. If these functions call for planning (they are "complex") a planning domain will be instantiated with the current state variables, solved, and then executed (updating the state).
 
+This codebase does not have a good UI. To run the arm class or the car class, one must swap variables in the code manually. Furthermore (another TODO), the cobot or the state classes are not yet made generic yet, as they should be:
+
 ``` mermaid
 graph TD
     A((State)) --> B((car state))
