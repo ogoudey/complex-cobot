@@ -10,6 +10,7 @@ PRINT = False
 
 from simple_cobots import cobot
 from cog_arch import sound_interface
+from cog_arch import state
 
 import sys
 import threading
@@ -25,8 +26,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
         
     event = threading.Event()
-
-    co = cobot.Collaboration()
+    
+    s = state.SimpleState()
+    co = cobot.Collaboration(s)
     si = sound_interface.SoundInterface()
     
     if args.deaf:

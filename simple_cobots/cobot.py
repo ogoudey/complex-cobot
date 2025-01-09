@@ -33,9 +33,9 @@ PRINT = True
 PRINT1 = True
 
 class Collaboration:
-    def __init__(self):
+    def __init__(self, state):
         self.minimal_problem = car_planner.MinimalProblem()
-    
+        self.state = state
     """
     
     Complex actions
@@ -43,27 +43,27 @@ class Collaboration:
     """
     
     def move(self):
-        prob = car_planner.Problem(self.minimal_problem)
+        prob = car_planner.Problem(self.minimal_problem, self.state)
         prob.problem.add_goal(prob.problem.fluent('c_at')(prob.problem.object("c4")))
         
         plan = prob.solve()
-        exe = car_executor.Executor()
+        exe = car_executor.Executor(self.state)
         exe.execute(plan)
         
     def deliver_thing(self):
-        prob = car_planner.Problem(self.minimal_problem)
+        prob = car_planner.Problem(self.minimal_problem, self.state)
         prob.problem.add_goal(prob.problem.fluent('t_at')(prob.problem.object("c1"), prob.problem.object('thing')))
     
         plan = prob.solve()
-        exe = car_executor.Executor()
+        exe = car_executor.Executor(self.state)
         exe.execute(plan)
         
     def receive_thing(self):
-        prob = car_planner.Problem(self.minimal_problem)
+        prob = car_planner.Problem(self.minimal_problem, self.state)
         prob.problem.add_goal(And(prob.problem.fluent('c_at')(prob.problem.object("c4")), prob.problem.fluent('carrying')))
     
         plan = prob.solve()
-        exe = car_executor.Executor()
+        exe = car_executor.Executor(self.state)
         exe.execute(plan)
             
     def interpret(self, message, bypassLLM=False):
@@ -117,6 +117,8 @@ class Collaboration:
         #print("(Executions:)\n" + str(executions))
         if PRINT:
             print("++++++++++Executing:+++++++++++")
+            print("Car location: " + str(self.state.location))
+            print("Thing location: " + str(self.state.location))
         for x in executions:
             try:
                 if PRINT:
@@ -129,4 +131,6 @@ class Collaboration:
                     print(e) 
                     print("^^^ Ignoring error potential execution " + x + "...)")
         if PRINT:
+            print("Car location: " + str(self.state.location))
+            print("Thing location: " + str(self.state.location))
             print("++++++++++End Executing+++++++++++")
