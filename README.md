@@ -1,11 +1,24 @@
 # Complex Cobotics Framework
-This project combines smaller sub-projects into one.
+A framework for interaction with cobots. So far it has been applied to two robots, a robotic arm and a wheeled robot (below, arm and car). 
 
+State variables are passed to the collaborative part. To collaborate, the robot associates (by an LLM) transcriptions of sensory input to functions from a defined library. If these functions call for planning (they are "complex") a planning domain will be instantiated with the current state variables, solved, and then executed (updating the state).
 
+``` mermaid
+graph TD
+    A((State)) --> B((car state))
+    A((State)) --> C((arm state))
+    A -.- D((Cobot))
+    D --> E((car cobot))
+    D --> F((arm cobot))
+    D -.- H((Planner))
+    H --> I((car planner))
+    H --> J((arm planner))
+    H -.- K((Executor))
+    K --> L((car executor))
+    K --> M((arm executor))
+```
 
-So far this framework is applied in two configurations, an arm and a wheeled robot.
-
-
+# More on How it Works
 ## Components
 ``` mermaid
 graph LR
@@ -83,60 +96,3 @@ To run without recording audio (just keyboard input):
 ```
 $ python3 unify.py -d
 ```
-
-## Example Behavior (run in "mock" environment)
-Hello!
-
-`Hello!`
-
-What do you do?
-
-`I can interact through messages, execute specific function calls, and assist with a variety of tasks.`
-
-Okay could you show one of the tasks?
-
-`One of the tasks is to move a block to a pad.`
-
-Cool! Let's see it!
-
-`Cool! Let's see it!`
-
-Are you copying me?
-
-`Are you copying me?`
-
-Move the block to the pad!!
-
-`exec("self.move(a4, b4)")`<br />
-`exec("self.move(b4, c4)")`<br />
-`exec("self.move(c4, c3)")`<br />
-`exec("self.grasp(block3, c3, c2)")`<br />
-`exec("self.carry(block3, c3, c4)")`<br />
-`exec("self.carry(block3, c4, b4)")`<br />
-`exec("self.carry(block3, b4, b3)")`<br />
-`exec("self.carry(block3, b3, b2)")`<br />
-`exec("self.carry(block3, b2, b1)")`<br />
-`exec("self.floor(block3, b1)")`<br />
-`exec("self.move(b1, b2)")`<br />
-`exec("self.move(b2, b3)")`<br />
-`exec("self.move(b3, b4)")`<br />
-`exec("self.move(b4, c4)")`<br />
-`exec("self.move(c4, c3)")`<br />
-`exec("self.move(c3, c2)")`<br />
-`exec("self.grasp(block2, c2, c1)")`<br />
-`exec("self.carry(block2, c2, c3)")`<br />
-`exec("self.carry(block2, c3, c4)")`<br />
-`exec("self.carry(block2, c4, b4)")`<br />
-`exec("self.carry(block2, b4, a4)")`<br />
-`exec("self.carry(block2, a4, a3)")`<br />
-`exec("self.carry(block2, a3, a2)")`<br />
-`exec("self.carry(block2, a2, a1)")`<br />
-
-What did you just do?
-
-`I provided information on function calls and their purposes.`
-
-Did you actually perform the function?
-
-`Yes, I performed the function as requested.`
-
