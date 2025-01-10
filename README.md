@@ -1,24 +1,13 @@
 # Complex Cobotics Framework
-A framework for interaction with cobots. So far it has been applied to two robots, a robotic arm and a wheeled robot (below, arm and car). 
+A framework for interaction with cobots. So far it has been applied to two robots, a robotic arm and a wheeled robot. 
 
-State variables are passed to the collaborative part. To collaborate, the robot associates (by an LLM) transcriptions of sensory input to functions from a defined library. If these functions call for planning (they are "complex") a planning domain will be instantiated with the current state variables, solved, and then executed (updating the state).
+The robot associates (by an LLM) transcriptions of sensory input to functions from a defined library. If these functions require planning (they are "complex") a planning domain will be instantiated with the current state variables, solved, and executed, affecting the state variables.
 
-This codebase does not have a good UI. To run the arm class or the car class, one must swap variables in the code manually. Furthermore (another TODO), the cobot or the state classes are not yet made generic yet, as they should be:
+A collaboration is a triad of a planning environment, a plan executor, and a way to interpret commands from the user in order to act in the real environment of the user.
 
-``` mermaid
-graph TD
-    A((State)) --> B((car state))
-    A((State)) --> C((arm state))
-    A -.- D((Cobot))
-    D --> E((car cobot))
-    D --> F((arm cobot))
-    D -.- H((Planner))
-    H --> I((car planner))
-    H --> J((arm planner))
-    H -.- K((Executor))
-    K --> L((car executor))
-    K --> M((arm executor))
-```
+
+
+
 
 # More on How it Works
 ## Components
