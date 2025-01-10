@@ -3,11 +3,16 @@ A framework for interaction with cobots. So far it has been applied to two robot
 
 The robot associates (by an LLM) transcriptions of sensory input to functions from a defined library. If these functions require planning (they are "complex") a planning domain will be instantiated with the current state variables, solved, and executed, affecting the state variables.
 
-A collaboration is a triad of a planning environment, a plan executor, and a way to interpret commands from the user in order to act in the real environment of the user.
 
+A collaboration is a triad of a planning environment, a plan executor, and a cognitive architecture which interprets communication from the user in order to act in the real environment of the user. The collaboration should appeal to the user's environment, so here we harness human language as the communication medium, decoded with OpenAI's `whisper`. 
 
+ ![diagram.png](resources/diagram.png)
 
-
+## Running
+Run with a `car` or an `arm`, on "deaf" mode, or with bypassing the LLM. (`--deaf` is recommended.)
+```
+$ python3 unify.py <--car, --arm> [--deaf] [--bypassLLM]
+```
 
 # More on How it Works
 ## Components
@@ -76,14 +81,3 @@ For the full version, the equired Python packages are:
 `openai`, `pyaudio` (`sudo apt install portaudio19-dev` might be required), `whisper` (`pip install git+https://github.com/openai/whisper.git`), `pyniryo2`, `unified-planning`, `unified-planning[pyperplan]`
 
 Make sure the microphone works, and if not running as mock, that a Ned2 (or other) is connected.
-
-### Run
-```
-$ python3 unify.py 
-```
-Then tell it to do something, e.g. stack the blocks in reverse, sleep for 10 seconds, or move a block onto a pad.
-
-To run without recording audio (just keyboard input):
-```
-$ python3 unify.py -d
-```
