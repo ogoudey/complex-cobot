@@ -87,6 +87,8 @@ class CarExecutor(Executor):
 class NedExecutor(Executor):
     def __init__(self):
         super().__init__()
+        
+        import pyniryo2
         try: # (again)
             self.robot = NiryoRobot("169.254.200.201") # Assuming ethernet!
         except Exception as e:
