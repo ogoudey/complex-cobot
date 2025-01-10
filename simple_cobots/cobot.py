@@ -3,43 +3,25 @@ from time import sleep
 
 from openai import OpenAI
 
-from unified_planning.shortcuts import * # dont need
+from unified_planning.shortcuts import *
 
-# generic classes
 from autonomy import planner, executor
-
-# blockstacking with Ned2
-#from autonomy import blockstacking, blockstacker
-
-# delivery with a car
-
 
 
 client = OpenAI()
-
-"""
-
-All things we declare to be executable with "suggestively typed" args. The unified_library search domain. E.g.:
-
-unified_library = ["sleep(seconds)", "print(text)", "self.move_block_to_pad()"] # search domain
-unified_library_truncs = ["sleep", "print",  "self.move_block_to_pad"] # generated
-
-"""
-
-
 
 PRINT = True
 PRINT1 = True
 
 class Collaboration:
     def __init__(self):
-        self.unified_library = ["sleep(seconds)", "print(text)"] # search domain
-        self.unified_library_truncs = ["sleep", "print"] # derivative
-        
+        self.unified_library = ["sleep(seconds)", "print(text)"] # generic search domain
+        self.unified_library_truncs = ["sleep", "print"] # generic derivative
     
-        pass
-   
-            
+    # Change this to test specific funtions from the search domain
+    def default_uninterpreted_function(self):
+        return "self.print('Hello world')"
+                
     def interpret(self, message, bypassLLM=False):
         if not bypassLLM:
             prompt = 'Here is a user message: "' + message + '"\nRespond with corresponding and necessary function calls from this set: \n' + str(self.unified_library) + "."
@@ -61,7 +43,7 @@ class Collaboration:
                 print(text)
                 print("~~~~~~~~~~~~~~~~~End Response:~~~~~~~~~~~~~~~~~\n")
         else: # Bypass LLM
-            text = "self.minimal_problem"
+            text = self.default_uniterpreted_funtion()
         # Actualizing
         
         # words = text.replace(",","").replace("\n", " ").split(' ') Method 1
